@@ -4,12 +4,13 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.richard.application.cofing.jackson.ObjectMapperSupplier;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-class ObjectMapperConfig {
+class JacksonConfig {
 
     @Bean
     ObjectMapper objectMapper() {
@@ -19,6 +20,11 @@ class ObjectMapperConfig {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         return objectMapper;
+    }
+
+    @Bean
+    <T> ObjectMapperSupplier<T> objectMapperSupplier(ObjectMapper objectMapper) {
+        return callback -> callback.apply(objectMapper);
     }
 
     @Bean
